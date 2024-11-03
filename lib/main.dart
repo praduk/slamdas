@@ -131,7 +131,7 @@ class _HomePageState extends State<HomePage> {
   void setupCamera(int select) {
     controller = CameraController(
       cameras[select],
-      ResolutionPreset.veryHigh,
+      ResolutionPreset.medium,
       enableAudio: false,
     );
     controller.initialize().then((_) {
@@ -246,7 +246,8 @@ class _HomePageState extends State<HomePage> {
     if (externalDir != null) {
       // Construct the path to a public folder on the SD card
       //String path = '${externalDir.path}/daq';
-      String path = '/storage/emulated/0/Download/daq';
+      //String path = '/storage/emulated/0/Download/daq';
+      String path = '/storage/3963-6363/Download/daq';
       Directory publicDir = Directory(path);
 
       if (!await publicDir.exists()) {
@@ -309,7 +310,7 @@ class _HomePageState extends State<HomePage> {
         child: SingleChildScrollView(
           child: Stack(
             children: [
-              getCameraPreview(),
+              !recording ? getCameraPreview() : Container(),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -366,21 +367,27 @@ class _IMUDisplayState extends State<IMUDisplay> {
     super.initState();
 
     // Listen to accelerometer events
-    asub = SensorsPlatform.instance.accelerometerEventStream().listen((e) {
+    asub = SensorsPlatform.instance
+        .accelerometerEventStream(samplingPeriod: SensorInterval.uiInterval)
+        .listen((e) {
       setState(() {
         ax = e.x;
         ay = e.y;
         az = e.z;
       });
     });
-    gsub = SensorsPlatform.instance.gyroscopeEventStream().listen((e) {
+    gsub = SensorsPlatform.instance
+        .gyroscopeEventStream(samplingPeriod: SensorInterval.uiInterval)
+        .listen((e) {
       setState(() {
         gx = e.x;
         gy = e.y;
         gz = e.z;
       });
     });
-    msub = SensorsPlatform.instance.magnetometerEventStream().listen((e) {
+    msub = SensorsPlatform.instance
+        .magnetometerEventStream(samplingPeriod: SensorInterval.uiInterval)
+        .listen((e) {
       setState(() {
         mx = e.x;
         my = e.y;
