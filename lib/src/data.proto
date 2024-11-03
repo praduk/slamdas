@@ -1,0 +1,21 @@
+syntax = "proto3";
+package praduslam;
+
+message Cartesian {
+  int64 t = 1;
+  double x = 2;
+  double y = 3;
+  double z = 4;
+}
+
+message Camera {
+  int64 t = 1;   // timestamp;
+  bytes png = 2; // PNG compressed image
+}
+
+message Recording {
+  repeated Cartesian gyro = 1;
+  repeated Cartesian accel = 2;
+  repeated Cartesian mag = 3;
+  repeated Camera camera = 4;
+}
